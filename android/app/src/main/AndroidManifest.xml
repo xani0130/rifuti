@@ -49,7 +49,7 @@
             android:value="ca-app-pub-3940256099942544~6300978111"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBCtzBnPcyAW4lMW8o_J6Ur4x-IQkvwuT8" />
+            android:value="AIzaSyC4yBFyWOpNrp0oMDeBAQRI1l2mIjs1mnk" />
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" /> 

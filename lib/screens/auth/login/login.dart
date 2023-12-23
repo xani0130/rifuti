@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:animation_wrappers/Animations/faded_scale_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_pool/components/widgets/colorButton.dart';
@@ -9,14 +7,16 @@ import 'package:go_pool/screens/home/navigationHome.dart';
 import 'package:go_pool/theme/colors.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
-import '../../../main.dart';
+import 'dart:convert';
+
 import 'login_interactor.dart';
 class ApiService {
-  static const String baseUrl = 'https://20231209t212033-dot-ikansia-f0754.uc.r.appspot.com/rifuti/api/v1';
+  static const String baseUrl =
+      'https://20231209t212033-dot-ikansia-f0754.uc.r.appspot.com/rifuti/api/v1/profileUsers/';
 
   static Future<Map<String, dynamic>> sendOTP(String phoneNumber) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/send-otp'),
+      Uri.parse('$baseUrl'),
       body: {'number': phoneNumber},
     );
 
@@ -26,21 +26,7 @@ class ApiService {
       throw Exception('Failed to send OTP');
     }
   }
-
-  static Future<Map<String, dynamic>> verifyOTP(String phoneNumber, String otp) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/verify-otp'),
-      body: {'phoneNumber': phoneNumber, 'otp': otp},
-    );
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to verify OTP');
-    }
-  }
 }
-
 class Login extends StatefulWidget {
   final LoginInteractor loginInteractor;
 
@@ -52,13 +38,12 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   String? car = "Please Select";
-final TextEditingController phoneC =  TextEditingController();
-final TextEditingController phoneotp =  TextEditingController();
 
-    dynamic data;
+  final TextEditingController phoneC = TextEditingController();
+
   Future<void> sendOTP() async {
     try {
-      final response = await ApiService.sendOTP(phoneC.text);
+      final response = await ApiService.sendOTP(phoneC.text.trim());
       // Handle the response (e.g., show a success message)
       print(response);
     } catch (e) {
@@ -67,23 +52,10 @@ final TextEditingController phoneotp =  TextEditingController();
     }
   }
 
-  Future<void> verifyOTP() async {
-    try {
-      final response = await ApiService.verifyOTP(
-        phoneC.text,
-        phoneotp.text,
-      );
-      // Handle the response (e.g., navigate to the next screen on success)
-      print(response);
-    } catch (e) {
-      // Handle errors (e.g., show an error message)
-      print(e);
-    }
-  }
+
   @override
   Widget build(BuildContext context) {
     var locale = AppLocalizations.of(context)!;
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -140,7 +112,7 @@ final TextEditingController phoneotp =  TextEditingController();
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 3.h,
+                            height: 4.h,
                           ),
                           // SizedBox(
                           //   height: 20,
@@ -167,8 +139,8 @@ final TextEditingController phoneotp =  TextEditingController();
                                       .textTheme
                                       .bodyLarge!
                                       .copyWith(
-                                          color: Colors.black,
-                                          fontSize: 11.2.sp),
+                                      color: Colors.black,
+                                      fontSize: 11.2.sp),
                                 ),
                                 SizedBox(
                                   height: 2.5.h,
@@ -192,15 +164,15 @@ final TextEditingController phoneotp =  TextEditingController();
                                     "China",
                                     "UAE"
                                   ].map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(bottom: .5.h),
-                                        child: Text(value),
-                                      ),
-                                    );
-                                  }).toList(),
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(bottom: .5.h),
+                                            child: Text(value),
+                                          ),
+                                        );
+                                      }).toList(),
                                   onChanged: (String? value) {
                                     setState(() {
                                       car = value;
@@ -213,12 +185,10 @@ final TextEditingController phoneotp =  TextEditingController();
                           SizedBox(
                             height: 2.5.h,
                           ),
-                          EntryField(
-
-                              locale.phoneNumber,
+                          EntryField(locale.phoneNumber,
                               locale.enterMobileNumber, false,phoneC),
                           SizedBox(
-                            height: 2.5.h,
+                            height: 2.3.h,
                           ),
                           GestureDetector(
                               onTap: () {
@@ -234,7 +204,7 @@ final TextEditingController phoneotp =  TextEditingController();
                               child: FadedScaleAnimation(
                                 child: ColorButton(locale.continuee),
                                 scaleDuration:
-                                    const Duration(milliseconds: 600),
+                                const Duration(milliseconds: 600),
                               ))
                         ],
                       ),
